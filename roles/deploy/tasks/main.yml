@@ -1,0 +1,7 @@
+- name: Copy fluent bit yaml files
+  copy:
+    src: '{{ playbook_dir }}/build'
+    dest: '{{ dest_dir }}'
+
+- name: Deploy fluent bit
+  command: kubectl apply -f '{{ dest_dir }}/build'
