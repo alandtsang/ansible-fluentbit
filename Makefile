@@ -6,7 +6,6 @@ FLUENT_HTTP_HOST   ?= "your.host.com"
 FLUENT_HTTP_PORT   ?= "host_port"
 #FLUENT_HTTP_HEADER ?= "Authorization Bearer xxxxxx"
 #FLUENT_HTTP_URI    ?= "/xxx/xxx"
-NAMESPACE          ?= logging
 
 MAKE_ENV += FLUENT_HTTP_HOST FLUENT_HTTP_PORT
 SHELL_EXPORT := $(foreach v,$(MAKE_ENV),$(v)='$($(v))')
@@ -34,17 +33,11 @@ build_fluent: build_dir
 # Check if the namespace exists
 KNS := $(shell kubectl get namespace $(NAMESPACE)  2> /dev/null; echo $$?)
 
-.PHONY: namespace
-namespace:
-ifeq ($(KNS),1)
-	@kubectl create namespace $(NAMESPACE)
-endif
-
 ##########
 # Deploy #
 ##########
 
 .PHONY: deploy
-deploy: namespace build_fluent
+deploy: build_fluent
 	@ansible-playbook -i hosts site.yml
 
