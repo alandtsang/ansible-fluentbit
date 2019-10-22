@@ -4,4 +4,9 @@
     dest: '{{ dest_dir }}'
 
 - name: Deploy fluent bit
-  command: 'kubectl apply -f {{ dest_dir }}/build'
+  shell: kubectl apply -f '{{ dest_dir }}/build'
+  register: kubectl_result
+
+- name: Show kubectl apply fluent bit
+  debug:
+    msg: "{{ kubectl_result.stdout_lines }}"
